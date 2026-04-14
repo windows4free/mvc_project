@@ -9,13 +9,28 @@
       "id": "Menu_SignUp",
       "nav_url": "index.php?page=Sec_Register",
       "nav_label":"<i class=\"fas fa-sign-in-alt\"></i>&nbsp;Crear Cuenta"
+    },
+     {
+      "id": "Menu_Products",
+      "nav_url": "index.php?page=Products_ProductsList",
+      "nav_label":"<i class=\"fas fa-sign-in-alt\"></i>&nbsp;Products"
     }
   ],
   "private": [
     {
       "id":"Menu_PaymentCheckout",
       "nav_url": "index.php?page=Checkout_Checkout",
-      "nav_label": "Carretilla de Compra"
+      "nav_label": "Shopping cart"
+    },
+    {
+      "id":"Menu_PaymentCheckoutAccept",
+      "nav_url": "index.php?page=Checkout_Accept",
+      "nav_label": "Accept"
+    },
+    {
+      "id":"Menu_PaymentCheckout",
+      "nav_url": "index.php?page=Checkout_Error",
+      "nav_label": "Error"
     }
   ]
 }
