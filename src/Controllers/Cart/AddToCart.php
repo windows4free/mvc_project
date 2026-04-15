@@ -4,6 +4,7 @@ namespace Controllers\Cart;
 
 use Controllers\PublicController;
 use Dao\Products\Products as ProductDao;
+use Utilities\Site as Site;
 
 const URL_TEMPLATE = "index.php?page=HomeController";
 
@@ -17,6 +18,12 @@ class AddToCart extends PublicController
             if ($productId > 0) {
                 $product = ProductDao::getProductById($productId);
                 if ($product["productStatus"] === "ACT") {
+                    $currentQuantity = $_SESSION["cart"][$productId]["quantity"] ?? 0;
+                    $requestedAmount = $currentQuantity + $quantity;
+                    if (intval($product["productStock"]) < $requestedAmount) {
+                        Site::redirectToWithMsg(URL_TEMPLATE,"El producto " . $product["productName"] . " no esta disponible este momento");
+                        die();
+                    }
                     if (!isset($_SESSION["cart"])) {
                         $_SESSION["cart"] = [];
                     }
@@ -29,13 +36,13 @@ class AddToCart extends PublicController
                             "productImgUrl" => $product["productImgUrl"],
                             "sku" => "PRD-" . $product["productId"],
                             "productPrice" => floatval($product["productPrice"]),
-                            "tax" => .15, // changing it later
+                            "tax" => 0, // changing it later
                             "quantity" => $quantity
                         ];
                     }
                 }
             }
-            \Utilities\Site::redirectToWithMsg(URL_TEMPLATE,"Artículo(s) añadido(s) al carrito");
+            Site::redirectToWithMsg(URL_TEMPLATE, "Artículo añadido(s) al carrito");
             die();
         }
     }

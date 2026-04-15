@@ -3,6 +3,8 @@
 namespace Controllers\Checkout;
 
 use Controllers\PublicController;
+use Dao\Products\Products as ProductDAO;
+const URL_TEMPLATE = "index.php?page=Cart_ShoppingCart";
 
 class Checkout extends PublicController
 {
@@ -11,6 +13,17 @@ class Checkout extends PublicController
         $viewData = array();
         if ($this->isPostBack()) {
             $items = $_SESSION["cart"] ?? [];
+
+            foreach ($items as $productId => $item) {
+                $productItem = ProductDAO::getProductById($productId);
+                if(!$productItem || intval($productItem["productStock"]) < intval($item["quantity"])) {
+                    unset($_SESSION["cart"][$productId]);
+
+                    \Utilities\Site::redirectToWithMsg(URL_TEMPLATE, "El producto: " . $item["productName"] . " no esta disponible");
+                    die();
+                }
+            }
+
             $PayPalOrder = new \Utilities\Paypal\PayPalOrder(
                 "test" . (time() - 10000000),
                 "http://localhost/mvc_project/index.php?page=Checkout_Error",

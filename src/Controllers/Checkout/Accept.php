@@ -3,6 +3,7 @@
 namespace Controllers\Checkout;
 
 use Controllers\PublicController;
+use Dao\Products\Products as ProductDAO;
 
 class Accept extends PublicController
 {
@@ -18,6 +19,15 @@ class Accept extends PublicController
             );
             $result = $PayPalRestApi->captureOrder($session_token);
             $dataview["orderjson"] = json_encode($result, JSON_PRETTY_PRINT);
+
+            $items = $_SESSION["cart"] ?? [];
+            foreach ($items as $productId => $item) {
+                ProductDAO::substractInventory($productId, $item["quantity"]);
+            }
+            unset($_SESSION["cart"]);
+            unset($_SESSION["orderid"]);
+
+
         } else {
             $dataview["orderjson"] = "No Order Available!!!";
         }
