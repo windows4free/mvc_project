@@ -32,5 +32,32 @@
       "nav_url": "index.php?page=Checkout_Error",
       "nav_label": "Error"
     }
+  ],
+  "private": [
+    {
+      "id":"Menu_Catalogo",
+      "nav_url": "index.php?page=Catalogo_Catalogo",
+      "nav_label": "<i class=\"fas fa-store\"></i>&nbsp;Catálogo"
+    },
+    {
+      "id":"Menu_Carretilla",
+      "nav_url": "index.php?page=Catalogo_Carretilla",
+      "nav_label": "<i class=\"fas fa-shopping-cart\"></i>&nbsp;Carretilla"
+    },
+    {
+      "id":"Menu_PaymentCheckout",
+      "nav_url": "index.php?page=Checkout_Checkout",
+      "nav_label": "<i class=\"fas fa-cash-register\"></i>&nbsp;Pagar"
+    },
+    {
+      "id":"Menu_Historial",
+      "nav_url": "index.php?page=Catalogo_Historial",
+      "nav_label": "<i class=\"fas fa-history\"></i>&nbsp;Historial de Pedidos"
+    },
+    {
+      "id":"Menu_Mantenimiento_Productos",
+      "nav_url": "index.php?page=Mantenimientos_Productos_Listado",
+      "nav_label": "<i class=\"fas fa-boxes\"></i>&nbsp;Mantenimiento de Productos"
+    }
   ]
 }
