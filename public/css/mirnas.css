@@ -208,29 +208,32 @@ a.btn-hero:hover,
 }
 
 /* ---- HOME PAGE ---- */
-.hero-logo {
-  font-size: 2.5rem;
-  color: var(--mirnas-gold);
-  margin-bottom: 0.5rem;
-}
-
-/* Logo hero - centrado sin recorte */
+/* Reemplaza o agrega esto */
 .hero.herocontainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: visible;
+  justify-content: center;          
+  background: linear-gradient(135deg, var(--mirnas-rose-dark) 0%, var(--mirnas-rose) 60%, var(--mirnas-gold) 100%); /* ← NUEVO: fondo propio */
+  padding: 2rem 1rem;              
+  gap: 1.5rem;                      
+  min-height: 380px;               
 }
 
 .hero.herocontainer > img {
   display: block;
-  max-width: min(600px, 90%);
+  max-width: min(500px, 85%);
   width: 100%;
   height: auto;
   object-fit: contain;
-  margin: 0 auto 1rem auto;
+  margin: 0;                        
+  border-radius: 10px;             
 }
 
+.action {
+  max-width: 420px;                 
+  width: 100%;
+}
 .action {
   background: rgba(45,45,45,0.85) !important;
   border-radius: 8px;
