@@ -20,7 +20,12 @@
     {
       "id": "Menu_PaymentCheckout",
       "nav_url": "index.php?page=Checkout_Checkout",
-      "nav_label": "Carretilla de Compra"
+      "nav_label": "<i class=\"fas fa-shopping-cart\"></i>&nbsp;Carretilla de Compra"
+    },
+    {
+      "id": "Menu_Mantenimiento_Productos",
+      "nav_url": "index.php?page=Mantenimientos-Products-Listado",
+      "nav_label": "<i class=\"fas fa-boxes\"></i>&nbsp;Mantenimiento de Productos"
     }
   ]
 }
