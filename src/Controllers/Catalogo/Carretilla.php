@@ -2,14 +2,14 @@
 
 namespace Controllers\Catalogo;
 
-use Controllers\PrivateController;
+use Controllers\PublicController;
 use Dao\Catalogo\Carretilla as CarretillaDAO;
 use Dao\Catalogo\Productos;
 use Utilities\Security;
 use Utilities\Site;
 use Views\Renderer;
 
-class Carretilla extends PrivateController
+class Carretilla extends PublicController
 {
     public function run(): void
     {

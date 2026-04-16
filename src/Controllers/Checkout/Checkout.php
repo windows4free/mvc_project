@@ -5,18 +5,38 @@ namespace Controllers\Checkout;
 use Controllers\PublicController;
 use Dao\Products\Products as ProductDAO;
 use Utilities\Site as Site;
-const URL_TEMPLATE = "index.php?page=Cart_ShoppingCart";
+use Utilities\Security;
+use Dao\Catalogo\Carretilla as CarretillaDAO;
 
 class Checkout extends PublicController
 {
     public function run(): void
     {
-        // unset($_SESSION["cart"]);
-        // unset($_SESSION["orderid"]);
         $viewData = array();
-        $usercod = \Utilities\Security::getUserId();
+        $usercod = Security::getUserId();
+        
+        // ===== AGREGAR ESTO: Obtener datos del carrito =====
+        $items = CarretillaDAO::getCarretillaByUser($usercod);
+        $total = CarretillaDAO::getTotalCarretilla($usercod);
+        
+        // Calcular subtotales por item
+        foreach ($items as &$item) {
+            $item["subtotal"] = number_format(
+                (float)$item["crrctd"] * (float)$item["crrprc"],
+                2
+            );
+            $item["crrprc"] = number_format((float)$item["crrprc"], 2);
+        }
+        unset($item);
+        
+        // Enviar los datos al template
+        $viewData["items"] = $items;
+        $viewData["total"] = number_format($total, 2);
+        $viewData["hayItems"] = count($items) > 0;
+        // ===================================================
+        
         if ($this->isPostBack()) {
-            $items = \Dao\Catalogo\Carretilla::getCarretillaByUser($usercod);
+            $items = CarretillaDAO::getCarretillaByUser($usercod);
 
             if (empty($items)) {
                 Site::redirectToWithMsg("index.php?page=Catalogo_Carretilla", "Su carretilla está vacía.");
@@ -30,14 +50,12 @@ class Checkout extends PublicController
                     die();
                 }
             }
+            
             $PayPalOrder = new \Utilities\Paypal\PayPalOrder(
                 "test" . (time() - 10000000),
                 "http://localhost/mvc_project/index.php?page=Checkout_Error",
                 "http://localhost/mvc_project/index.php?page=Checkout_Accept"
             );
-
-            // $PayPalOrder->addItem("Test", "TestItem1", "PRD1", 100, 15, 1, "DIGITAL_GOODS");
-            // $PayPalOrder->addItem("Test 2", "TestItem2", "PRD2", 50, 7.5, 2, "DIGITAL_GOODS");
 
             foreach ($items as $item) {
                 $PayPalOrder->addItem(
@@ -45,7 +63,7 @@ class Checkout extends PublicController
                     $item["productDescription"],
                     $item["sku"] ?? "PRD" . $item["productId"],
                     floatval($item["crrprc"]),
-                    0, //tax not working                       
+                    0,
                     intval($item["crrctd"]),
                     "DIGITAL_GOODS"
                 );
@@ -57,6 +75,7 @@ class Checkout extends PublicController
             );
             $PayPalRestApi->getAccessToken();
             $response = $PayPalRestApi->createOrder($PayPalOrder);
+            
             if ($response->id) {
                 $_SESSION["orderid"] = $response->id;
                 foreach ($response->links as $link) {
