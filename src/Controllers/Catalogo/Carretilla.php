@@ -14,16 +14,20 @@ class Carretilla extends PublicController
     public function run(): void
     {
         $viewData = [];
-        $usercod  = Security::getUserId();
-        $accion   = $_GET["accion"] ?? "";
+        $usercod = Security::getUserId();
+        $accion = $_GET["accion"] ?? "";
 
         if ($accion === "agregar" && $this->isPostBack()) {
+            if (!Security::isLogged()) {
+                Site::redirectTo("index.php?page=Sec_Login");
+                die();
+            }
             $productId = intval($_POST["productId"] ?? 0);
-            $cantidad  = intval($_POST["cantidad"] ?? 1);
+            $cantidad = intval($_POST["cantidad"] ?? 1);
             if ($productId > 0 && $cantidad > 0) {
                 $producto = Productos::getProductoById($productId);
                 if (!empty($producto)) {
-                    CarretillaDAO::agregarOActualizar($usercod, $productId, $cantidad, (float)$producto["productPrice"]);
+                    CarretillaDAO::agregarOActualizar($usercod, $productId, $cantidad, (float) $producto["productPrice"]);
                 }
             }
             Site::redirectTo("index.php?page=Catalogo_Carretilla");
@@ -51,15 +55,15 @@ class Carretilla extends PublicController
         // Calcular subtotales por item
         foreach ($items as &$item) {
             $item["subtotal"] = number_format(
-                (float)$item["crrctd"] * (float)$item["crrprc"],
+                (float) $item["crrctd"] * (float) $item["crrprc"],
                 2
             );
-            $item["crrprc"] = number_format((float)$item["crrprc"], 2);
+            $item["crrprc"] = number_format((float) $item["crrprc"], 2);
         }
         unset($item);
 
-        $viewData["items"]    = $items;
-        $viewData["total"]    = number_format($total, 2);
+        $viewData["items"] = $items;
+        $viewData["total"] = number_format($total, 2);
         $viewData["hayItems"] = count($items) > 0;
 
         Renderer::render("catalogo/carretilla", $viewData);
