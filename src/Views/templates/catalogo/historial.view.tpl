@@ -1,12 +1,16 @@
 <section class="historial-section">
-  <h2><i class="fas fa-history"></i> Historial de Pedidos</h2>
+  <h2><i class="fas fa-history"></i> Historial de Compras</h2>
 
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- VISTA DE DETALLE DE UNA ORDEN                             -->
+  <!-- ══════════════════════════════════════════════════════════ -->
   {{if verDetalle}}
   <div class="historial-detalle">
     <div class="detalle-header">
       <h3>Detalle de Orden #{{orden.ordenId}}</h3>
       <span class="orden-estado estado-{{orden.ordenEstado}}">{{orden.ordenEstado}}</span>
     </div>
+
     <p><strong>Fecha:</strong> {{orden.ordenFecha}}</p>
     <p><strong>PayPal ID:</strong> {{orden.paypalOrderId}}</p>
 
@@ -24,7 +28,8 @@
         <tr>
           <td>
             <div class="carr-producto">
-              <img src="{{productImgUrl}}" alt="{{productName}}" onerror="this.src='public/imgs/hero/1.jpg'" />
+              <img src="{{productImgUrl}}" alt="{{productName}}"
+                   onerror="this.src='public/imgs/hero/1.jpg'" />
               <span>{{productName}}</span>
             </div>
           </td>
@@ -46,7 +51,11 @@
   </div>
   {{endif verDetalle}}
 
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- LISTA DE ÓRDENES                                          -->
+  <!-- ══════════════════════════════════════════════════════════ -->
   {{ifnot verDetalle}}
+
   {{if ordenes}}
   <table class="WWList">
     <thead>
@@ -64,9 +73,12 @@
         <td>#{{ordenId}}</td>
         <td>{{ordenFecha}}</td>
         <td>L {{ordenTotal}}</td>
-        <td><span class="orden-estado estado-{{ordenEstado}}">{{ordenEstado}}</span></td>
         <td>
-          <a href="index.php?page=Catalogo_Historial&ordenId={{ordenId}}" class="btn-detalle">
+          <span class="orden-estado estado-{{ordenEstado}}">{{ordenEstado}}</span>
+        </td>
+        <td>
+          <a href="index.php?page=Catalogo_Historial&ordenId={{ordenId}}"
+             class="btn-detalle">
             <i class="fas fa-eye"></i> Ver Detalle
           </a>
         </td>
@@ -85,5 +97,6 @@
     </a>
   </div>
   {{endifnot ordenes}}
+
   {{endifnot verDetalle}}
 </section>
