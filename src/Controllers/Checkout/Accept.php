@@ -5,6 +5,7 @@ namespace Controllers\Checkout;
 use Controllers\PublicController;
 use Dao\Products\Products as ProductDAO;
 use Dao\Catalogo\Carretilla as CarretillaDAO;
+use Dao\Ordenes\Ordenes as OrdenesDAO;          // ← AGREGAR este use
 
 class Accept extends PublicController
 {
@@ -23,6 +24,11 @@ class Accept extends PublicController
 
             $usercod = \Utilities\Security::getUserId();
             $items = CarretillaDAO::getCarretillaByUser($usercod);
+
+            // ── GUARDAR HISTORIAL ──────────────────────────────────────────
+            OrdenesDAO::guardarOrden($usercod, $session_token, $items);
+            // ──────────────────────────────────────────────────────────────
+
             foreach ($items as $item) {
                 $productId = $item["userprd"] ?? $item["productId"];
                 $quantity = intval($item["crrctd"]);
@@ -33,7 +39,6 @@ class Accept extends PublicController
             CarretillaDAO::vaciarCarretilla($usercod);
             unset($_SESSION["cart"]);
             unset($_SESSION["orderid"]);
-
 
         } else {
             $dataview["orderjson"] = "No Order Available!!!";
