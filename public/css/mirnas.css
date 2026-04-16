@@ -214,6 +214,23 @@ a.btn-hero:hover,
   margin-bottom: 0.5rem;
 }
 
+/* Logo hero - centrado sin recorte */
+.hero.herocontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: visible;
+}
+
+.hero.herocontainer > img {
+  display: block;
+  max-width: min(600px, 90%);
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto 1rem auto;
+}
+
 .action {
   background: rgba(45,45,45,0.85) !important;
   border-radius: 8px;

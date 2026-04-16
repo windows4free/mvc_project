@@ -1,6 +1,6 @@
 <!-- HERO -->
 <div class="hero herocontainer">
-  <img src="public/imgs/hero/1.jpg" alt="Mirnas Exclusividades" />
+  <img src="public/imgs/hero/logo.png" alt="Mirnas Exclusividades" class="hero-logo-img" />
   <div class="action">
     <div class="hero-logo"><i class="fas fa-crown"></i></div>
     <h2>Mirnas Exclusividades</h2>
