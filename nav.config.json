@@ -9,11 +9,6 @@
       "id": "Menu_SignUp",
       "nav_url": "index.php?page=Sec_Register",
       "nav_label": "<i class=\"fas fa-sign-in-alt\"></i>&nbsp;Crear Cuenta"
-    },
-    {
-      "id": "Menu_Products",
-      "nav_url": "index.php?page=Products_Products",
-      "nav_label": "<i class=\"fas fa-table\"></i>&nbsp;WW Productos"
     }
   ],
   "private": [
@@ -23,9 +18,9 @@
       "nav_label": "<i class=\"fas fa-shopping-cart\"></i>&nbsp;Carretilla de Compra"
     },
     {
-  "id": "Menu_Historial",
-  "nav_url": "index.php?page=Catalogo_Historial",
-  "nav_label": "<i class=\"fas fa-history\"></i>&nbsp;Historial de Compras"
+      "id": "Menu_Historial",
+      "nav_url": "index.php?page=Catalogo_Historial",
+      "nav_label": "<i class=\"fas fa-history\"></i>&nbsp;Historial de Compras"
     },
     {
       "id": "Menu_Mantenimiento_Productos",

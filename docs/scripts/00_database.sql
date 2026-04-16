@@ -1,1 +1,1 @@
-CREATE SCHEMA `ecommerce` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE SCHEMA `mirnas_exclusividades` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

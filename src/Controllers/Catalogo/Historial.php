@@ -2,12 +2,12 @@
 
 namespace Controllers\Catalogo;
 
-use Controllers\PrivateController;
+use Controllers\PublicController;
 use Dao\Ordenes\Ordenes as OrdenesDAO;
 use Utilities\Security;
 use Views\Renderer;
 
-class Historial extends PrivateController
+class Historial extends PublicController
 {
     public function run(): void
     {
