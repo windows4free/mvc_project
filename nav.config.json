@@ -23,6 +23,11 @@
       "nav_label": "<i class=\"fas fa-shopping-cart\"></i>&nbsp;Carretilla de Compra"
     },
     {
+  "id": "Menu_Historial",
+  "nav_url": "index.php?page=Catalogo_Historial",
+  "nav_label": "<i class=\"fas fa-history\"></i>&nbsp;Historial de Compras"
+    },
+    {
       "id": "Menu_Mantenimiento_Productos",
       "nav_url": "index.php?page=Mantenimientos-Products-Listado",
       "nav_label": "<i class=\"fas fa-boxes\"></i>&nbsp;Mantenimiento de Productos"
