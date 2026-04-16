@@ -2,18 +2,18 @@
 
 namespace Controllers\Catalogo;
 
-use Controllers\PublicController;
+use Controllers\PrivateController;
 use Dao\Catalogo\Carretilla as CarretillaDAO;
 use Dao\Catalogo\Productos;
 use Utilities\Security;
 use Utilities\Site;
 use Views\Renderer;
 
-class Carretilla extends PublicController
+class Carretilla extends PrivateController
 {
     public function run(): void
     {
-        $viewData = array();
+        $viewData = [];
         $usercod  = Security::getUserId();
         $accion   = $_GET["accion"] ?? "";
 
