@@ -3,15 +3,16 @@
 namespace Controllers\Mantenimientos\Products;
 
 use Dao\Mantenimientos\Products as ProductsDAO;
-use Controllers\PublicController;
+use Controllers\PrivateController;
 use Views\Renderer;
 use Utilities\Site;
+use Controllers\PrivateNoAuthException;
 
 const PRODUCTS_FORMULARIO_URL = "index.php?page=Mantenimientos-Products-Formulario";
-const PRODUCTS_LISTADO_URL    = "index.php?page=Mantenimientos-Products-Listado";
-const PRODUCTS_XSRF_KEY       = "Mantenimientos_Products_Formulario";
+const PRODUCTS_LISTADO_URL = "index.php?page=Mantenimientos-Products-Listado";
+const PRODUCTS_XSRF_KEY = "Mantenimientos_Products_Formulario";
 
-class Formulario extends PublicController
+class Formulario extends PrivateController
 {
     private array $viewData = [];
     private array $modes = [
@@ -19,6 +20,12 @@ class Formulario extends PublicController
         "UPD" => "Actualizar %s %s",
         "DSP" => "Detalle de %s %s",
         "DEL" => "Eliminando %s %s"
+    ];
+    private array $accessControl = [
+        "INS" => "Controllers\\Mantenimientos\\Products\\Formulario",
+        "UPD" => "Controllers\\Mantenimientos\\Products\\Formulario",
+        "DEL" => "Controllers\\Mantenimientos\\Products\\Formulario",
+        "DSP" => "Controllers\\Mantenimientos\\Products\\Formulario"
     ];
     private array $confirmTooltips = [
         "INS" => "",
@@ -55,7 +62,7 @@ class Formulario extends PublicController
                             $this->productStatus
                         ) !== 0) {
                             Site::redirectToWithMsg(PRODUCTS_LISTADO_URL, "Producto creado satisfactoriamente");
-                        };
+                        }
                         break;
                     case "UPD":
                         if (ProductsDAO::actualizarProducto(
@@ -68,14 +75,12 @@ class Formulario extends PublicController
                             $this->productStatus
                         ) !== 0) {
                             Site::redirectToWithMsg(PRODUCTS_LISTADO_URL, "Producto actualizado satisfactoriamente");
-                        };
+                        }
                         break;
                     case "DEL":
-                        if (ProductsDAO::eliminarProducto(
-                            $this->productId
-                        ) !== 0) {
+                        if (ProductsDAO::eliminarProducto($this->productId) !== 0) {
                             Site::redirectToWithMsg(PRODUCTS_LISTADO_URL, "Producto eliminado satisfactoriamente");
-                        };
+                        }
                         break;
                 }
             }
@@ -90,6 +95,12 @@ class Formulario extends PublicController
         if (!isset($this->modes[$this->mode])) {
             Site::redirectToWithMsg(PRODUCTS_LISTADO_URL, "Error al cargar formulario, Intente de nuevo");
         }
+        
+        // Verificar permiso según el modo
+        if (isset($this->accessControl[$this->mode]) && !$this->isFeatureAutorized($this->accessControl[$this->mode])) {
+            throw new PrivateNoAuthException();
+        }
+        
         $this->productId = intval($_GET["id"] ?? '0');
         if ($this->mode !== "INS" && $this->productId <= 0) {
             Site::redirectToWithMsg(PRODUCTS_LISTADO_URL, "Error al cargar formulario, Se requiere Id del Producto");
