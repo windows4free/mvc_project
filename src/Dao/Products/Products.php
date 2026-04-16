@@ -71,17 +71,16 @@ class Products extends Table
         return $affectedRow;
     }
 
-    public static function substractInventory(
-        $productId,
-        $quantity
-    ) {
+    public static function substractFromInventory($productId, $quantity)
+    {
         $sqlstr = "UPDATE products SET productStock = productStock - :quantity WHERE productId = :productId AND productStock >= :quantity;";
+
         $params = [
-            "productId" => $productId,
-            "quantity" => $quantity
+            "quantity" => $quantity,
+            "productId" => $productId
         ];
-        $affectedRow = self::executeNonQuery($sqlstr, $params);
-        return $affectedRow;
+
+        return self::executeNonQuery($sqlstr, $params);
     }
 
     public static function getNewProducts()

@@ -4,6 +4,7 @@ namespace Controllers\Checkout;
 
 use Controllers\PublicController;
 use Dao\Products\Products as ProductDAO;
+use Dao\Catalogo\Carretilla as CarretillaDAO;
 
 class Accept extends PublicController
 {
@@ -20,10 +21,16 @@ class Accept extends PublicController
             $result = $PayPalRestApi->captureOrder($session_token);
             $dataview["orderjson"] = json_encode($result, JSON_PRETTY_PRINT);
 
-            $items = $_SESSION["cart"] ?? [];
-            foreach ($items as $productId => $item) {
-                ProductDAO::substractInventory($productId, $item["cantidad"]);
+            $usercod = \Utilities\Security::getUserId();
+            $items = CarretillaDAO::getCarretillaByUser($usercod);
+            foreach ($items as $item) {
+                $productId = $item["userprd"] ?? $item["productId"];
+                $quantity = intval($item["crrctd"]);
+                if ($productId) {
+                    ProductDAO::substractFromInventory($productId, $quantity);
+                }
             }
+            CarretillaDAO::vaciarCarretilla($usercod);
             unset($_SESSION["cart"]);
             unset($_SESSION["orderid"]);
 
