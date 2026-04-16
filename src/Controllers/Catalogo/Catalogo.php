@@ -12,6 +12,8 @@ class Catalogo extends PublicController
     public function run(): void
     {
         Site::addLink("public/css/mirnas.css");
+        //Site::addLink("public/css/mirnas.css?v=" . time());
+
         $viewData = array();
 
         $categoria = $_GET["categoria"] ?? "ALL";

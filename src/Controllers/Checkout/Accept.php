@@ -22,7 +22,7 @@ class Accept extends PublicController
 
             $items = $_SESSION["cart"] ?? [];
             foreach ($items as $productId => $item) {
-                ProductDAO::substractInventory($productId, $item["quantity"]);
+                ProductDAO::substractInventory($productId, $item["cantidad"]);
             }
             unset($_SESSION["cart"]);
             unset($_SESSION["orderid"]);

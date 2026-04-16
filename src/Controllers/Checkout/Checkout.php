@@ -4,26 +4,32 @@ namespace Controllers\Checkout;
 
 use Controllers\PublicController;
 use Dao\Products\Products as ProductDAO;
+use Utilities\Site as Site;
 const URL_TEMPLATE = "index.php?page=Cart_ShoppingCart";
 
 class Checkout extends PublicController
 {
     public function run(): void
     {
+        // unset($_SESSION["cart"]);
+        // unset($_SESSION["orderid"]);
         $viewData = array();
+        $usercod = \Utilities\Security::getUserId();
         if ($this->isPostBack()) {
-            $items = $_SESSION["cart"] ?? [];
+            $items = \Dao\Catalogo\Carretilla::getCarretillaByUser($usercod);
 
-            foreach ($items as $productId => $item) {
-                $productItem = ProductDAO::getProductById($productId);
-                if(!$productItem || intval($productItem["productStock"]) < intval($item["quantity"])) {
-                    unset($_SESSION["cart"][$productId]);
+            if (empty($items)) {
+                Site::redirectToWithMsg("index.php?page=Catalogo_Carretilla", "Su carretilla está vacía.");
+                die();
+            }
 
-                    \Utilities\Site::redirectToWithMsg(URL_TEMPLATE, "El producto: " . $item["productName"] . " no esta disponible");
+            foreach ($items as $item) {
+                $productItem = ProductDAO::getProductById($item["productId"]);
+                if (!$productItem || intval($productItem["productStock"]) < intval($item["crrctd"])) {
+                    Site::redirectToWithMsg("index.php?page=Catalogo_Carretilla", "El producto no tiene stock suficiente.");
                     die();
                 }
             }
-
             $PayPalOrder = new \Utilities\Paypal\PayPalOrder(
                 "test" . (time() - 10000000),
                 "http://localhost/mvc_project/index.php?page=Checkout_Error",
@@ -37,10 +43,10 @@ class Checkout extends PublicController
                 $PayPalOrder->addItem(
                     $item["productName"],
                     $item["productDescription"],
-                    $item["sku"],
-                    $item["productPrice"],
-                    $item["tax"],
-                    $item["quantity"],
+                    $item["sku"] ?? "PRD" . $item["productId"],
+                    floatval($item["crrprc"]),
+                    0, //tax not working                       
+                    intval($item["crrctd"]),
                     "DIGITAL_GOODS"
                 );
             }
@@ -51,14 +57,15 @@ class Checkout extends PublicController
             );
             $PayPalRestApi->getAccessToken();
             $response = $PayPalRestApi->createOrder($PayPalOrder);
-
-            $_SESSION["orderid"] = $response->id;
-            foreach ($response->links as $link) {
-                if ($link->rel == "approve") {
-                    \Utilities\Site::redirectTo($link->href);
-                } 
+            if ($response->id) {
+                $_SESSION["orderid"] = $response->id;
+                foreach ($response->links as $link) {
+                    if ($link->rel == "approve") {
+                        Site::redirectTo($link->href);
+                        die();
+                    }
+                }
             }
-            die();
         }
 
         \Views\Renderer::render("paypal/checkout", $viewData);
