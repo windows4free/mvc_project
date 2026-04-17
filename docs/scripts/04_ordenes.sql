@@ -1,8 +1,4 @@
--- ============================================================
--- Script: 04_ordenes.sql
--- Descripción: Tablas para el historial de compras
--- Ejecutar DESPUÉS de 03_products.sql
--- ============================================================
+
 
 CREATE TABLE `ordenes` (
     `ordenId`       BIGINT(20)     NOT NULL AUTO_INCREMENT,
